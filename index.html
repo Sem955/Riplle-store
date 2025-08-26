@@ -1,162 +1,253 @@
-<!DOCTYPE html><html lang="id">
+<!DOCTYPE html>
+<html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard Admin - Toko Baju</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Toko Baju — Everyday</title>
+  <meta name="description" content="Toko baju modern: koleksi santai, nyaman, serbaguna. Ikat, kawung, mega mendung dalam warna baru, kain natural: katun, tencel, rayon."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f5f5f5;
+    :root{
+      --bg:#ffffff;--txt:#1d1d1f;--muted:#6b7280;--accent:#111827;--accent-2:#e5e7eb;--brand:#111111;
+      --card:#f9fafb;--shadow:0 8px 24px rgba(0,0,0,.08);
     }
-    header {
-      background: #111;
-      color: #fff;
-      padding: 1rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    header h1 {
-      font-size: 1.2rem;
-      margin: 0;
-    }
-    .menu-btn {
-      font-size: 1.5rem;
-      cursor: pointer;
-      background: none;
-      border: none;
-      color: #fff;
-    }
-    .sidebar {
-      position: fixed;
-      top: 0;
-      left: -250px;
-      width: 250px;
-      height: 100%;
-      background: #222;
-      color: #fff;
-      padding: 1rem;
-      transition: left 0.3s ease;
-      z-index: 1000;
-    }
-    .sidebar.active {
-      left: 0;
-    }
-    .sidebar h2 {
-      margin-top: 0;
-    }
-    .sidebar ul {
-      list-style: none;
-      padding: 0;
-    }
-    .sidebar ul li {
-      margin: 1rem 0;
-    }
-    .sidebar ul li a {
-      color: #fff;
-      text-decoration: none;
-    }
-    .close-btn {
-      background: none;
-      border: none;
-      color: #fff;
-      font-size: 1.2rem;
-      float: right;
-      cursor: pointer;
-    }
-    main {
-      padding: 1rem;
-    }
-    .card {
-      background: #fff;
-      padding: 1rem;
-      margin-bottom: 1rem;
-      border-radius: 8px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 1rem;
-    }
-    table, th, td {
-      border: 1px solid #ddd;
-    }
-    th, td {
-      padding: 8px;
-      text-align: left;
-    }
-    th {
-      background: #eee;
-    }
-    .btn {
-      background: #111;
-      color: #fff;
-      padding: 6px 12px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-    .btn:hover {
-      background: #444;
-    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:var(--bg);color:var(--txt)}
+    a{color:inherit;text-decoration:none}
+    img{max-width:100%;display:block}
+
+    /* Header */
+    .header{position:sticky;top:0;z-index:50;background:#fff;border-bottom:1px solid var(--accent-2)}
+    .topbar{display:flex;align-items:center;gap:.75rem;justify-content:space-between;padding:.8rem 1rem;max-width:1200px;margin:auto}
+    .iconbtn{background:#fff;border:1px solid var(--accent-2);width:40px;height:40px;border-radius:12px;display:grid;place-items:center}
+    .logo{font-weight:800;font-size:1.5rem;letter-spacing:.02em}
+    .right{display:flex;align-items:center;gap:.5rem}
+    .badge{position:relative}
+    .badge span{position:absolute;top:-6px;right:-6px;background:#111;color:#fff;border-radius:999px;padding:2px 6px;font-size:.65rem}
+
+    .searchwrap{padding:0 1rem 1rem;border-bottom:1px solid var(--accent-2)}
+    .search{display:flex;gap:.5rem;max-width:1200px;margin:auto}
+    .search input{flex:1;border:1px solid var(--accent-2);border-radius:12px;padding:.8rem 1rem;font-size:.95rem}
+    .search select{border:1px solid var(--accent-2);border-radius:12px;padding:.8rem 1rem;background:#fff}
+
+    /* Hero */
+    .hero{max-width:1200px;margin:1rem auto 0;border-radius:24px;overflow:hidden}
+    .hero img{width:100%;height:auto}
+
+    /* Intro */
+    .intro{max-width:900px;margin:1.25rem auto 0;padding:0 1rem;text-align:center}
+    .intro h1{font-size:2.2rem;margin:.25rem 0 0}
+    .intro p{color:var(--muted);line-height:1.7}
+
+    /* Toolbar */
+    .toolbar{max-width:1200px;margin:1rem auto;padding:0 1rem;display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;justify-content:space-between}
+    .toolbar .filters{display:flex;gap:.5rem;flex-wrap:wrap}
+    .chip{border:1px solid var(--accent-2);background:#fff;border-radius:999px;padding:.5rem .9rem;font-size:.9rem;cursor:pointer}
+    .chip.active{background:#111;color:#fff;border-color:#111}
+
+    /* Grid */
+    .grid{max-width:1200px;margin:0 auto 4rem;padding:0 1rem;display:grid;grid-template-columns:repeat(12,1fr);gap:1rem}
+    .card{grid-column:span 6;background:var(--card);border:1px solid var(--accent-2);border-radius:18px;overflow:hidden;box-shadow:var(--shadow);display:flex;flex-direction:column}
+    .card .imgwrap{position:relative;aspect-ratio:3/4;background:#eee}
+    .card .imgwrap .tag{position:absolute;left:.6rem;top:.6rem;background:#111;color:#fff;border-radius:999px;padding:.25rem .6rem;font-size:.72rem}
+    .info{padding:.9rem}
+    .title{font-weight:600}
+    .muted{color:var(--muted)}
+    .price{margin-top:.3rem;font-weight:700}
+    .actions{display:flex;gap:.5rem;margin-top:.75rem}
+    .btn{flex:1;display:inline-flex;justify-content:center;align-items:center;border-radius:12px;border:1px solid var(--accent-2);padding:.7rem 1rem;background:#fff;cursor:pointer}
+    .btn.primary{background:#111;color:#fff;border-color:#111}
+
+    /* Footer */
+    footer{border-top:1px solid var(--accent-2);padding:2rem 1rem;color:var(--muted)}
+    footer .wrap{max-width:1200px;margin:auto;display:grid;gap:1rem}
+
+    /* Responsive */
+    @media(min-width:640px){.card{grid-column:span 4}}
+    @media(min-width:1024px){.card{grid-column:span 3}.intro h1{font-size:2.6rem}}
   </style>
 </head>
-<body><header>
-  <button class="menu-btn" onclick="toggleSidebar()">☰</button>
-  <h1>Dashboard Admin</h1>
-</header><aside class="sidebar" id="sidebar">
-  <button class="close-btn" onclick="toggleSidebar()">✖</button>
-  <h2>Menu</h2>
-  <ul>
-    <li><a href="#">Produk</a></li>
-    <li><a href="#">Pesanan</a></li>
-    <li><a href="#">Kategori</a></li>
-    <li><a href="#">Pengguna</a></li>
-    <li><a href="#">Laporan</a></li>
-  </ul>
-</aside><main>
-  <div class="card">
-    <h2>Data Produk</h2>
-    <button class="btn">+ Tambah Produk</button>
-    <table>
-      <thead>
-        <tr>
-          <th>Nama Produk</th>
-          <th>Kategori</th>
-          <th>Harga</th>
-          <th>Stok</th>
-          <th>Aksi</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Kaos Polos</td>
-          <td>Men</td>
-          <td>Rp 100.000</td>
-          <td>50</td>
-          <td>
-            <button class="btn">Edit</button>
-            <button class="btn">Hapus</button>
-          </td>
-        </tr>
-        <tr>
-          <td>Dress Casual</td>
-          <td>Women</td>
-          <td>Rp 150.000</td>
-          <td>30</td>
-          <td>
-            <button class="btn">Edit</button>
-            <button class="btn">Hapus</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="topbar">
+      <button class="iconbtn" id="menuBtn" aria-label="Menu" title="Menu">
+        <!-- Hamburger -->
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+      </button>
+      <div class="logo" aria-label="Brand">M</div>
+      <div class="right">
+        <button class="iconbtn" title="Akun" aria-label="Akun">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+        </button>
+        <button class="iconbtn" title="Cari" aria-label="Cari" onclick="document.getElementById('q').focus()">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        </button>
+        <div class="badge">
+          <button class="iconbtn" id="cartBtn" title="Keranjang" aria-label="Keranjang">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 12.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+          </button>
+          <span id="cartCount" hidden>0</span>
+        </div>
+      </div>
+    </div>
+    <div class="searchwrap">
+      <div class="search">
+        <input id="q" type="search" placeholder="Cari baju, motif, atau bahan…"/>
+        <select id="sort">
+          <option value="default">Urutkan</option>
+          <option value="price-asc">Harga terendah</option>
+          <option value="price-desc">Harga tertinggi</option>
+          <option value="new">Terbaru</option>
+        </select>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <img alt="Koleksi Everyday" src="https://images.unsplash.com/photo-1540573133985-87b6da6d54a9?q=80&w=1600&auto=format&fit=crop"/>
+  </section>
+
+  <!-- Intro -->
+  <section class="intro">
+    <h1>EVERYDAY</h1>
+    <p>
+      Everyday adalah koleksi saudari Major Minor yang dirilis ulang untuk menjawab isu keberlanjutan. Koleksinya merayakan gaya santai dengan kenyamanan maksimal dan kemudahan bergerak.
+      Terinspirasi tradisi <em>ikat</em>, <em>kawung</em>, hingga <em>mega mendung</em> dalam warna baru, menggunakan bahan natural seperti katun, tencel, dan rayon.
+    </p>
+  </section>
+
+  <!-- Toolbar / Filters -->
+  <div class="toolbar">
+    <div class="filters" id="filters">
+      <button class="chip active" data-filter="all">Semua</button>
+      <button class="chip" data-filter="dress">Dress</button>
+      <button class="chip" data-filter="tops">Atasan</button>
+      <button class="chip" data-filter="bottoms">Bawahan</button>
+      <button class="chip" data-filter="outer">Outer</button>
+    </div>
+    <div class="muted" id="count">0 hasil</div>
   </div>
-</main><script>
-  function toggleSidebar() {
-    document.getElementById('sidebar').classList.toggle('active');
-  }
-</script></body>
-</html>
+
+  <!-- Grid -->
+  <main class="grid" id="grid"></main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="wrap">
+      <div>
+        <strong>Everyday</strong><br/>
+        © <span id="year"></span> — Semua hak cipta.
+      </div>
+      <div>
+        Hubungi kami: <a href="#">support@everyday.shop</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ====== Data Produk (ganti dengan data Anda) ======
+    const PRODUCTS = [
+      {id:1,title:"Kemeja Ikat Santai",category:"tops",price:259000,badge:"Baru",date:"2025-08-01",img:"https://images.unsplash.com/photo-1520975922323-7cc58237108e?q=80&w=900&auto=format&fit=crop"},
+      {id:2,title:"Dress Mega Mendung",category:"dress",price:389000,badge:"",date:"2025-07-20",img:"https://images.unsplash.com/photo-1541099649105-f69ad21f3246?q=80&w=900&auto=format&fit=crop"},
+      {id:3,title:"Celana Motif Kawung",category:"bottoms",price:299000,badge:"Terlaris",date:"2025-07-28",img:"https://images.unsplash.com/photo-1520975867597-0f7f14f3f0cb?q=80&w=900&auto=format&fit=crop"},
+      {id:4,title:"Outer Tencel Ringan",category:"outer",price:329000,badge:"",date:"2025-06-30",img:"https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?q=80&w=900&auto=format&fit=crop"},
+      {id:5,title:"Blus Rayon Garis",category:"tops",price:219000,badge:"",date:"2025-07-10",img:"https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=900&auto=format&fit=crop"},
+      {id:6,title:"Rok Ikat A-Line",category:"bottoms",price:279000,badge:"",date:"2025-07-05",img:"https://images.unsplash.com/photo-1469334031218-e382a71b716b?q=80&w=900&auto=format&fit=crop"},
+      {id:7,title:"Dress Rayon Lengan Puff",category:"dress",price:349000,badge:"",date:"2025-08-10",img:"https://images.unsplash.com/photo-1520975867597-0f7f14f3f0cb?q=80&w=900&auto=format&fit=crop"},
+      {id:8,title:"Cardigan Katun Rajut",category:"outer",price:309000,badge:"",date:"2025-07-17",img:"https://images.unsplash.com/photo-1540573133985-87b6da6d54a9?q=80&w=900&auto=format&fit=crop"},
+      {id:9,title:"Tunic Mega Mendung",category:"tops",price:289000,badge:"",date:"2025-08-02",img:"https://images.unsplash.com/photo-1556906781-9a412961c28c?q=80&w=900&auto=format&fit=crop"},
+      {id:10,title:"Celana Kulot Tencel",category:"bottoms",price:319000,badge:"",date:"2025-07-29",img:"https://images.unsplash.com/photo-1612423284934-2850a4ea3c1f?q=80&w=900&auto=format&fit=crop"},
+      {id:11,title:"Blazer Minimal",category:"outer",price:459000,badge:"",date:"2025-08-12",img:"https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=900&auto=format&fit=crop"},
+      {id:12,title:"Dress Katun Ruffle",category:"dress",price:379000,badge:"",date:"2025-08-08",img:"https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?q=80&w=900&auto=format&fit=crop"}
+    ];
+
+    const grid = document.getElementById('grid');
+    const count = document.getElementById('count');
+    const filters = document.getElementById('filters');
+    const q = document.getElementById('q');
+    const sortSel = document.getElementById('sort');
+    const cartCount = document.getElementById('cartCount');
+
+    let state = {query:'',filter:'all',sort:'default',cart:[]};
+
+    function formatIDR(n){return new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',maximumFractionDigits:0}).format(n)}
+
+    function render(){
+      const query = state.query.trim().toLowerCase();
+      let items = PRODUCTS.filter(p=> state.filter==='all' ? true : p.category===state.filter)
+        .filter(p => p.title.toLowerCase().includes(query));
+
+      if(state.sort==='price-asc') items.sort((a,b)=>a.price-b.price);
+      if(state.sort==='price-desc') items.sort((a,b)=>b.price-a.price);
+      if(state.sort==='new') items.sort((a,b)=> new Date(b.date)-new Date(a.date));
+
+      count.textContent = `${items.length} hasil`;
+      grid.innerHTML = items.map(p=>cardHTML(p)).join('');
+      attachCardEvents();
+    }
+
+    function cardHTML(p){
+      return `
+        <article class="card">
+          <div class="imgwrap">
+            ${p.badge?`<span class="tag">${p.badge}</span>`:''}
+            <img loading="lazy" alt="${p.title}" src="${p.img}">
+          </div>
+          <div class="info">
+            <div class="title">${p.title}</div>
+            <div class="muted">${label(p.category)}</div>
+            <div class="price">${formatIDR(p.price)}</div>
+            <div class="actions">
+              <button class="btn" data-id="${p.id}" data-action="detail">Detail</button>
+              <button class="btn primary" data-id="${p.id}" data-action="cart">Tambah</button>
+            </div>
+          </div>
+        </article>`
+    }
+
+    function label(cat){
+      return ({dress:'Dress',tops:'Atasan',bottoms:'Bawahan',outer:'Outer'})[cat]||cat
+    }
+
+    function attachCardEvents(){
+      grid.querySelectorAll('button[data-action]')?.forEach(btn=>{
+        btn.addEventListener('click', e=>{
+          const id = +btn.dataset.id;
+          const action = btn.dataset.action;
+          const product = PRODUCTS.find(x=>x.id===id);
+          if(action==='cart') addToCart(product);
+          if(action==='detail') alert(`${product.title}\n${formatIDR(product.price)}`);
+        })
+      })
+    }
+
+    function addToCart(p){
+      state.cart.push(p.id);
+      const total = state.cart.length;
+      cartCount.textContent = total;
+      cartCount.hidden = total===0;
+    }
+
+    // Events
+    q.addEventListener('input', e=>{state.query = e.target.value; render()})
+    sortSel.addEventListener('change', e=>{state.sort = e.target.value; render()})
+    filters.querySelectorAll('.chip').forEach(chip=>{
+      chip.addEventListener('click', ()=>{
+        filters.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+        chip.classList.add('active');
+        state.filter = chip.dataset.filter; render();
+      })
+    })
+
+    // Init
+    document.getElementById('year').textContent = new Date().getFullYear();
+    render();
+  </script>
+</body>
+                                                                                                                                                            </html>
+  
