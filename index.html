@@ -22,7 +22,7 @@
     /* Header */
     .header{position:sticky;top:0;z-index:50;background:#fff;border-bottom:1px solid var(--accent-2)}
     .topbar{display:flex;align-items:center;gap:.75rem;justify-content:space-between;padding:.8rem 1rem;max-width:1200px;margin:auto}
-    .iconbtn{background:#fff;border:1px solid var(--accent-2);width:40px;height:40px;border-radius:12px;display:grid;place-items:center}
+    .iconbtn{background:#fff;border:1px solid var(--accent-2);width:40px;height:40px;border-radius:12px;display:grid;place-items:center;cursor:pointer}
     .logo{font-weight:800;font-size:1.5rem;letter-spacing:.02em}
     .right{display:flex;align-items:center;gap:.5rem}
     .badge{position:relative}
@@ -65,6 +65,52 @@
     footer{border-top:1px solid var(--accent-2);padding:2rem 1rem;color:var(--muted)}
     footer .wrap{max-width:1200px;margin:auto;display:grid;gap:1rem}
 
+    /* Sidebar */
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: -280px;
+      width: 260px;
+      height: 100%;
+      background: #fff;
+      box-shadow: 2px 0 10px rgba(0,0,0,.1);
+      transition: left .3s ease;
+      z-index: 1000;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+    }
+    .sidebar.open { left: 0; }
+    .sidebar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    .sidebar-header .closebtn {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+    .menu {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: .8rem;
+    }
+    .menu li a {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #111;
+      text-decoration: none;
+      display: block;
+      padding: .5rem 0;
+    }
+    .menu li a:hover { color: #007aff; }
+
     /* Responsive */
     @media(min-width:640px){.card{grid-column:span 4}}
     @media(min-width:1024px){.card{grid-column:span 3}.intro h1{font-size:2.6rem}}
@@ -106,6 +152,25 @@
       </div>
     </div>
   </header>
+
+  <!-- Sidebar Menu -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <strong>Menu</strong>
+      <button class="closebtn" id="closeSidebar">&times;</button>
+    </div>
+    <ul class="menu">
+      <li><a href="new.html">New Arrivals</a></li>
+      <li><a href="men.html">Men RTW</a></li>
+      <li><a href="women.html">Women RTW</a></li>
+      <li><a href="kids.html">Kids and Baby</a></li>
+      <li><a href="shoes.html">Shoes</a></li>
+      <li><a href="accessories.html">Accessories</a></li>
+      <li><a href="bags.html">Bags</a></li>
+      <li><a href="beauty.html">Beauty and Lifestyle</a></li>
+      <li><a href="brands.html">Brands</a></li>
+    </ul>
+  </aside>
 
   <!-- Hero -->
   <section class="hero">
@@ -175,79 +240,4 @@
 
     let state = {query:'',filter:'all',sort:'default',cart:[]};
 
-    function formatIDR(n){return new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',maximumFractionDigits:0}).format(n)}
-
-    function render(){
-      const query = state.query.trim().toLowerCase();
-      let items = PRODUCTS.filter(p=> state.filter==='all' ? true : p.category===state.filter)
-        .filter(p => p.title.toLowerCase().includes(query));
-
-      if(state.sort==='price-asc') items.sort((a,b)=>a.price-b.price);
-      if(state.sort==='price-desc') items.sort((a,b)=>b.price-a.price);
-      if(state.sort==='new') items.sort((a,b)=> new Date(b.date)-new Date(a.date));
-
-      count.textContent = `${items.length} hasil`;
-      grid.innerHTML = items.map(p=>cardHTML(p)).join('');
-      attachCardEvents();
-    }
-
-    function cardHTML(p){
-      return `
-        <article class="card">
-          <div class="imgwrap">
-            ${p.badge?`<span class="tag">${p.badge}</span>`:''}
-            <img loading="lazy" alt="${p.title}" src="${p.img}">
-          </div>
-          <div class="info">
-            <div class="title">${p.title}</div>
-            <div class="muted">${label(p.category)}</div>
-            <div class="price">${formatIDR(p.price)}</div>
-            <div class="actions">
-              <button class="btn" data-id="${p.id}" data-action="detail">Detail</button>
-              <button class="btn primary" data-id="${p.id}" data-action="cart">Tambah</button>
-            </div>
-          </div>
-        </article>`
-    }
-
-    function label(cat){
-      return ({dress:'Dress',tops:'Atasan',bottoms:'Bawahan',outer:'Outer'})[cat]||cat
-    }
-
-    function attachCardEvents(){
-      grid.querySelectorAll('button[data-action]')?.forEach(btn=>{
-        btn.addEventListener('click', e=>{
-          const id = +btn.dataset.id;
-          const action = btn.dataset.action;
-          const product = PRODUCTS.find(x=>x.id===id);
-          if(action==='cart') addToCart(product);
-          if(action==='detail') alert(`${product.title}\n${formatIDR(product.price)}`);
-        })
-      })
-    }
-
-    function addToCart(p){
-      state.cart.push(p.id);
-      const total = state.cart.length;
-      cartCount.textContent = total;
-      cartCount.hidden = total===0;
-    }
-
-    // Events
-    q.addEventListener('input', e=>{state.query = e.target.value; render()})
-    sortSel.addEventListener('change', e=>{state.sort = e.target.value; render()})
-    filters.querySelectorAll('.chip').forEach(chip=>{
-      chip.addEventListener('click', ()=>{
-        filters.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
-        chip.classList.add('active');
-        state.filter = chip.dataset.filter; render();
-      })
-    })
-
-    // Init
-    document.getElementById('year').textContent = new Date().getFullYear();
-    render();
-  </script>
-</body>
-                                                                                                                                                            </html>
-  
+    function formatIDR(n){return new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',maximumFractionDigits:
